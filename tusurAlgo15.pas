@@ -77,10 +77,15 @@ begin
 	Temp := Temp2;
 end;
 procedure moveLastToFirst(); {Замещаем первый элемент последним}
+var
+	TempFirst: PNode;
 begin
 	if checkNode(false) then
-		if First^.Next<>NIL then begin		
-			First^.Value := walkNode(false);
+		if First^.Next<>NIL then begin
+			new(TempFirst);
+			TempFirst^.value := walkNode(false);
+			TempFirst^.Next := First;
+			First := TempFirst;
 			Temp := First;
 			disposeLast(); {Удаляем последний элемент}
 		end else nodeError(1);
