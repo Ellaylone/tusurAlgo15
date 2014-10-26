@@ -6,35 +6,34 @@ type
 		Next: PNode; {Указатель на следующий элемент}
 	end;
 var
-	First: PNode;
-	Temp: PNode;
-	v: integer;
-procedure nodeError(code: Shortint);
+	First: PNode; {Первый элемент}
+	Temp: PNode; {Список}
+	v: integer; {Вспомогательная переменная}
+procedure nodeError(code: Shortint); {Вывод ошибки по коду}
 begin
-	if (code=1) then begin {}
+	if (code=1) then begin {В списке только один элемент, невозможно выполнить операцию}
 		writeln('Only one element in node');
-	end else if(code=2) then begin {Исчерпание очереди}
+	end else if(code=2) then begin {Список пуст}
 		writeln('Node is empty');
 	end;
 end;
-function checkNode(shout: Boolean): Boolean;
+function checkNode(shout: Boolean): Boolean; {Проверка на возможность выполнения операции над списком}
 begin
 	if First=NIL then begin 
-		if shout then nodeError(2);
+		if shout then nodeError(2); {список пуст}
 		checkNode := false;
 	end else checkNode := true;
 end;
-procedure makeNode();
+procedure makeNode(); {Создание и наполнение списка}
 begin
-	First := nil;
+	First := nil; {Создание пустого списка}
 	repeat
 		writeln('Enter new value (0 to stop)');
-		readln(v);
-		if v=0 then break; {Если 0 - окончим ввод элементов}
-		//TODO check if integer
-		if First=NIL then
+		readln(v); {Ввод значений}
+		if v=0 then break; {Если 0 - окончить ввод}
+		if First=NIL then {Если список пуст}
 			begin
-				new(Temp); {Создали первый элемент. Его адрес в Temp}
+				new(Temp); {Создаем первый элемент}
 				First:=Temp;
 			end
 		else
@@ -42,11 +41,11 @@ begin
 			New(Temp^.Next); {Создаем на основе предыдущего, чтобы сохранилась связь между элементами}
 			Temp:=Temp^.Next;
 		end;
-		Temp^.Value:=v;
+		Temp^.Value:=v; {Записываем значение}
 	until false;
 	if checkNode(false) then Temp^.Next:=NIL; {В последнем элементе нет ссылки на следующий элемент}
 end;
-function walkNode(show: Boolean): integer;
+function walkNode(show: Boolean): integer; {Проход по всем элементам списка}
 var
 	tempValue: integer;
 begin
@@ -54,18 +53,18 @@ begin
 	Temp := First;
 	while Temp<>NIL do
 	begin
-	tempValue := Temp^.Value;
-		if show=true then write(tempValue);
+		tempValue := Temp^.Value;
+		if show=true then write(tempValue); {Вывод}
 		Temp := Temp^.Next;
 	end;
 	if show=true then writeln();
-	walkNode := tempValue;
+	walkNode := tempValue; {Возвращаем значение последнего элемента}
 end;
-procedure showNode();
+procedure showNode(); {Вывести список в консоль}
 begin
-	if checkNode(false) then	walkNode(true);
+	if checkNode(true) then walkNode(true); {Сначала вызываем проверку списка}
 end;
-procedure disposeLast();
+procedure disposeLast(); {Удалить последний элемент списка}
 var
 	Temp2: PNode;
 begin
@@ -77,13 +76,13 @@ begin
 	Temp2^.Next := nil;
 	Temp := Temp2;
 end;
-procedure moveLastToFirst();
+procedure moveLastToFirst(); {Замещаем первый элемент последним}
 begin
 	if checkNode(false) then
 		if First^.Next<>NIL then begin		
 			First^.Value := walkNode(false);
 			Temp := First;
-			disposeLast();
+			disposeLast(); {Удаляем последний элемент}
 		end else nodeError(1);
 end;
 begin
