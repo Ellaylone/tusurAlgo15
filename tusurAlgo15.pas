@@ -76,7 +76,7 @@ begin
 	Temp2^.Next := nil; {Предпоследний элемент больше не ссылается ни на что}
 	Temp := Temp2; {Заменяем предпоследний элемент}
 end;
-procedure moveLastToFirst(); {Замещаем первый элемент последним}
+procedure moveLastToFirst(); {Перемещаем последний элемент в начало}
 var
 	TempFirst: PNode; {Временный первый элемент}
 begin
