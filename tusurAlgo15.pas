@@ -47,17 +47,17 @@ begin
 end;
 function walkNode(show: Boolean): integer; {Проход по всем элементам списка}
 var
-	tempValue: integer;
+	tempValue: integer; {Переменная для хранения значения последнего элемента}
 begin
 	tempValue := 0;
-	Temp := First;
+	Temp := First; {Проходим список с первого элемента}
 	while Temp<>NIL do
 	begin
 		tempValue := Temp^.Value;
-		if show=true then write(tempValue); {Вывод}
+		if show=true then write(tempValue); {Вывод если нужен}
 		Temp := Temp^.Next;
 	end;
-	if show=true then writeln();
+	if show=true then writeln(); {Конец строки}
 	walkNode := tempValue; {Возвращаем значение последнего элемента}
 end;
 procedure showNode(); {Вывести список в консоль}
@@ -66,29 +66,30 @@ begin
 end;
 procedure disposeLast(); {Удалить последний элемент списка}
 var
-	Temp2: PNode;
+	Temp2: PNode; {Вспомогательная переменная для сохранения предпоследнего элемента}
 begin
 	while Temp^.Next<>NIL do
 	begin
-		Temp2 := Temp;
+		Temp2 := Temp; {Сохраняем предпоследний элемент}
 		Temp := Temp^.Next;
 	end;
-	Temp2^.Next := nil;
-	Temp := Temp2;
+	Temp2^.Next := nil; {Предпоследний элемент больше не ссылается ни на что}
+	Temp := Temp2; {Заменяем предпоследний элемент}
 end;
 procedure moveLastToFirst(); {Замещаем первый элемент последним}
 var
-	TempFirst: PNode;
+	TempFirst: PNode; {Временный первый элемент}
 begin
-	if checkNode(false) then
-		if First^.Next<>NIL then begin
-			new(TempFirst);
-			TempFirst^.value := walkNode(false);
-			TempFirst^.Next := First;
-			First := TempFirst;
-			Temp := First;
-			disposeLast(); {Удаляем последний элемент}
+	if checkNode(false) then begin
+		if First^.Next<>NIL then begin {Находим последний элемент}
+			new(TempFirst); {Создаем новый пустой элемент}
+			TempFirst^.value := walkNode(false); {Присваеваем ему значение последнего элемента списка}
+			TempFirst^.Next := First; {Записываем в него ссылку на первый элемент списка}
+			First := TempFirst; {Заменяем первый элемент новым}
+			Temp := First; {Возвращаем список в начало}
+			disposeLast(); {Удаляем последний элемент списка}
 		end else nodeError(1);
+	end;
 end;
 begin
 	makeNode(); {Наполняем список}
